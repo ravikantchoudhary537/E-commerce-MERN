@@ -15,21 +15,37 @@ import ShoppingHome from "./pages/shoping-view/home";
 import CheckAuth from "./components/common/check-auth";
 import UnAuthPage from "./pages/un-auth";
 import ShoppingListing from "./pages/shoping-view/listing";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { checkAuth } from "./store/auth-slice";
+import { Skeleton } from "./components/ui/skeleton";
 
 function App() {
-  const isAuthenticated = true;
-  const user = {
-    name: "Ravikant",
-    role: "admin",
-  };
+  const { user, isAuthenticated, isLoading } = useSelector(
+    (state) => state.auth
+  );
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
+
+  if (isLoading) {
+    console.log("Loading ho gyi ");
+    <Skeleton className="w-[800] bg-black h-[600px]" />
+  }
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
         <Route
           path="/auth"
           element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <CheckAuth
+              isAuthenticated={isAuthenticated}
+              user={user}
+              isLoading={isLoading}
+            >
               <AuthLayout />
             </CheckAuth>
           }
@@ -40,7 +56,11 @@ function App() {
         <Route
           path="/admin"
           element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <CheckAuth
+              isAuthenticated={isAuthenticated}
+              user={user}
+              isLoading={isLoading}
+            >
               <AdminLayout />
             </CheckAuth>
           }
@@ -53,7 +73,11 @@ function App() {
         <Route
           path="/shop"
           element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <CheckAuth
+              isAuthenticated={isAuthenticated}
+              user={user}
+              isLoading={isLoading}
+            >
               <ShoppingLayout />
             </CheckAuth>
           }
@@ -61,10 +85,10 @@ function App() {
           <Route path="account" element={<ShoppingAccount />}></Route>
           <Route path="checkout" element={<ShoppingCheckout />}></Route>
           <Route path="home" element={<ShoppingHome />}></Route>
-          <Route path="listing" element={<ShoppingListing/>}></Route>
+          <Route path="listing" element={<ShoppingListing />}></Route>
         </Route>
         <Route path="*" element={<NotFoundPAge />}></Route>
-        <Route path="/unauth-page" element={<UnAuthPage/>}></Route>
+        <Route path="/unauth-page" element={<UnAuthPage />}></Route>
       </Routes>
     </div>
   );
