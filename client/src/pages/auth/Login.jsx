@@ -1,7 +1,8 @@
 import CommonForm from "@/components/common/form";
 import { loginFormControls } from "@/config";
 import { useToast } from "@/hooks/use-toast";
-import { loginUser } from "@/store/auth-slice";
+import { useLoginUserMutation } from "@/store/authapi";
+
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
@@ -14,24 +15,32 @@ const initialState = {
 
 const AuthLogin = () => {
   const [formData, setFormData] = useState(initialState);
-  const dispatch =useDispatch();
+ const [loginUser,{loading,error}]=useLoginUserMutation();
   const {toast}=useToast();
   const onSubmit = async (e) => {
     e.preventDefault();
-   await dispatch(loginUser(formData)).then((data)=>{
-      if(data?.payload?.success){
+    try {
+      const result = await loginUser(formData).unwrap();
+      // console.log(result)
+      if (result?.success) {
         toast({
-          title:data?.payload?.message,
-          variant:"success"
-        })
-      }
-      else{
+          title: result?.message,
+          variant: "success",
+        });
+      } else {
         toast({
-          title:data?.payload?.message,
-          variant:"destructive"
-        })
+          title: result?.message,
+          variant: "destructive",
+        });
       }
-    })
+    } catch (error) {
+      toast({
+        title: "An unexpected error occurred.",
+        description: error?.message || "Please try again later.",
+        variant: "destructive",
+      });
+      console.log("Error during login ", error);
+    }
   };
 
   return (

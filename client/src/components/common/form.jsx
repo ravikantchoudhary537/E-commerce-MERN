@@ -31,6 +31,7 @@ function CommonForm({
             id={getControlItem.name}
             type={getControlItem.type}
             value={value}
+            autoComplete={getControlItem.autoComplete || "off"} // Add autoComplete attribute
             onChange={(event) =>
               setFormData({
                 ...formData,
@@ -94,6 +95,7 @@ function CommonForm({
             id={getControlItem.name}
             type={getControlItem.type}
             value={value}
+            autoComplete={getControlItem.autoComplete || "off"} // Add autoComplete attribute
             onChange={(event) =>
               setFormData({
                 ...formData,

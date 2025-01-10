@@ -9,6 +9,7 @@ const connectToDB = require("./config/connectDB");
 const app = express();
 const port = process.env.PORT || 5000;
 const userRouter=require("./routes/user.routes.js");
+const AdminProductRouter=require("./routes/admin/product.routes.js");
  connectToDB();
 app.use(
   cors({
@@ -28,6 +29,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use('/api/auth/',userRouter);
+app.use('/api/admin/products',AdminProductRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

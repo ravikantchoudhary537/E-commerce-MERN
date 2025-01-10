@@ -5,6 +5,7 @@ import React,{Fragment, useState} from "react";
 import { useDispatch } from "react-redux";
 import CommonForm from "@/components/common/form";
 import { addProductFormElements } from "@/config";
+import ProductImageUpload from "./image-upload";
 
 const initialFormData = {
   image: null,
@@ -54,15 +55,15 @@ const AdminProducts = () => {
               {currentEditedId !== null ? "Edit Product" : "Add New Product"}
             </SheetTitle>
           </SheetHeader>
-          {/* <ProductImageUpload
+          <ProductImageUpload
             imageFile={imageFile}
             setImageFile={setImageFile}
             uploadedImageUrl={uploadedImageUrl}
             setUploadedImageUrl={setUploadedImageUrl}
             setImageLoadingState={setImageLoadingState}
             imageLoadingState={imageLoadingState}
-            isEditMode={currentEditedId !== null}
-          /> */}
+            // isEditMode={currentEditedId !== null}
+          />
           <div className="py-6">
             <CommonForm
               onSubmit={onSubmit}

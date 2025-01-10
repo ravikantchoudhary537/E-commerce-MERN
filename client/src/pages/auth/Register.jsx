@@ -1,9 +1,9 @@
 import CommonForm from "@/components/common/form";
 import { registerFormControls } from "@/config";
 import { useToast } from "@/hooks/use-toast";
-import { registerUser } from "@/store/auth-slice";
+import { useRegisterUserMutation } from "@/store/authapi";
+
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 const initialState = {
@@ -13,29 +13,34 @@ const initialState = {
 };
 
 const AuthRegister = () => {
+  const [registerUser, { isLoading, error }] = useRegisterUserMutation();
   const { toast } = useToast();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    dispatch(registerUser(formData)).then((data) => {
-      console.log("Data come from bcakend ", data);
-      if (data?.payload?.success) {
+    try {
+      const result = await registerUser(formData).unwrap();
+      if (result?.success) {
         toast({
-          title: data?.payload?.message,
-          variant:"success"
+          title: result?.message,
+          variant: "success",
         });
         navigate("/auth/login");
-      }
-      else{
-        console.log("sucess abcibibi");
+      } else {
         toast({
-          title: data?.payload?.message,
+          title: result?.message,
           variant: "destructive",
-        })
+        });
       }
-    }).catch((err) => console.log(err));
+    } catch (error) {
+      toast({
+        title: "An unexpected error occurred.",
+        description: error?.message || "Please try again later.",
+        variant: "destructive",
+      });
+      console.log("Error during register ", error);
+    }
   };
   const [formData, setFormData] = useState(initialState);
   return (

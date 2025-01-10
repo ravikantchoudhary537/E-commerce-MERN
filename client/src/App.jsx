@@ -15,26 +15,28 @@ import ShoppingHome from "./pages/shoping-view/home";
 import CheckAuth from "./components/common/check-auth";
 import UnAuthPage from "./pages/un-auth";
 import ShoppingListing from "./pages/shoping-view/listing";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { checkAuth } from "./store/auth-slice";
+import { useSelector } from "react-redux";
+
 import { Skeleton } from "./components/ui/skeleton";
+import { useCheckAuthQuery } from "./store/authapi";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
     (state) => state.auth
   );
 
-  const dispatch = useDispatch();
+  const { data, error, isLoading: isAuthLoading } = useCheckAuthQuery();
 
-  useEffect(() => {
-    dispatch(checkAuth());
-  }, [dispatch]);
-
-  if (isLoading) {
-    console.log("Loading ho gyi ");
-    <Skeleton className="w-[800] bg-black h-[600px]" />
+  if (isLoading || isAuthLoading) {
+    // console.log("Loading ... in app.js  ");
+    <Skeleton className="w-[800] bg-black h-[600px]" />;
   }
+
+  // Handle error state
+  // if (error) {
+  //   return <div>Error: {error.message || "Failed to authenticate"}</div>;
+  // }
+
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>

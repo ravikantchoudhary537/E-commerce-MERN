@@ -8,7 +8,7 @@ function CheckAuth({ isAuthenticated, user,isLoading, children }) {
     return <Skeleton className="w-[800] bg-black h-[600px]" />;
   }
 
-  console.log(location.pathname, isAuthenticated);
+  // console.log(location.pathname, isAuthenticated);
 
   if (location.pathname === "/") {
     if (!isAuthenticated) {
