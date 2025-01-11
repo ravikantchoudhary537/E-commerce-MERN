@@ -1,3 +1,4 @@
+import { createSlice } from "@reduxjs/toolkit";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const baseUrl = "http://localhost:8000/api/admin/products";
@@ -20,6 +21,7 @@ export const adminProductApi = createApi({
         method: "POST",
         body: formData,
       }),
+      invalidatesTags: [{ type: "Product", id: "LIST" }],
     }),
 
     // Fetch All Products
@@ -28,6 +30,7 @@ export const adminProductApi = createApi({
         url: "/getproduct",
         method: "GET",
       }),
+      invalidatesTags: [{ type: "Product", id: "LIST" }],
     }),
 
     // Edit Product
@@ -57,3 +60,40 @@ export const {
   useDeleteProductMutation,
 } = adminProductApi;
 
+
+const initialState = {
+    isLoading: false,
+    productList: [],
+  };
+  
+  const AdminProductsSlice = createSlice({
+    name: "adminProducts",
+    initialState,
+    reducers: {},
+    extraReducers: (builder) => {
+      builder
+        // Handle fetchAllProducts query
+        .addMatcher(
+          adminProductApi.endpoints.fetchAllProducts.matchPending,
+          (state) => {
+            state.isLoading = true;
+          }
+        )
+        .addMatcher(
+          adminProductApi.endpoints.fetchAllProducts.matchFulfilled,
+          (state, action) => {
+            state.isLoading = false;
+            state.productList = action.payload?.data || [];
+          }
+        )
+        .addMatcher(
+          adminProductApi.endpoints.fetchAllProducts.matchRejected,
+          (state) => {
+            state.isLoading = false;
+            state.productList = [];
+          }
+        );
+    },
+  });
+  
+  export default AdminProductsSlice.reducer;

@@ -10,7 +10,7 @@ function CheckAuth({ isAuthenticated, user,isLoading, children }) {
 
   // console.log(location.pathname, isAuthenticated);
 
-  if (location.pathname === "/") {
+  if (location.pathname === "") {
     if (!isAuthenticated) {
       return <Navigate to="/auth/login" />;
     } else {

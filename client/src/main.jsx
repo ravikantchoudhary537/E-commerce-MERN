@@ -6,17 +6,16 @@ import { Provider } from "react-redux";
 import store from "./store/store";
 import { Toaster } from "./components/ui/toaster";
 
-
 createRoot(document.getElementById("root")).render(
   <BrowserRouter
-  future={{
-    v7_startTransition: true,
-    v7_relativeSplatPath: true,
-  }}
+    future={{
+      v7_startTransition: true,
+      v7_relativeSplatPath: true,
+    }}
   >
     <Provider store={store}>
       <App />
-      <Toaster/>
+      <Toaster autoClose={3000} position="bottom-right" />
     </Provider>
   </BrowserRouter>
 );
